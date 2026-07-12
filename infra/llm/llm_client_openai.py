@@ -66,19 +66,3 @@ class OpenAILLMClient(LLMClient):
         except Exception as e:
             print(f"❌ 流式调用 {self.providerName} API 时发生错误: {e}")
             return
-
-
-class HelloAgentsLLM(OpenAILLMClient):
-    """
-    向后兼容旧类名与 think() 调用方式。
-    默认使用 OpenAI 实现。
-    """
-
-    def think(self, messages: Messages, temperature: float = 0) -> Optional[str]:
-        print("✅ 大语言模型响应成功:")
-        collected_content = []
-        for content in self.complete_stream(messages, temperature=temperature):
-            print(content, end="", flush=True)
-            collected_content.append(content)
-        print()  # 在流式输出结束后换行
-        return "".join(collected_content) if collected_content else None
